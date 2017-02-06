@@ -8,7 +8,7 @@
 # attribute (chattr +i .zshrc) set so that it CANNOT be modified
 # by my own user, only read.
 SHA256SUM=$(sha256sum "$HOME/.real_zshrc" | sed 's/ .*//g')
-if [[ "$SHA256SUM" == "720625e4fe3c699d89de35e72e019b3ba7a93f13e2292103ad29236e2c993430" ]]
+if [[ "$SHA256SUM" == "9683d4cb63b8248d92d6b523501fe02ffe898232a7fba9a0e29c1a1db25737e5" ]]
 then
   source "$HOME/.real_zshrc"
 else
