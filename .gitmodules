@@ -10,3 +10,6 @@
 [submodule "solarized/intellij-colors-solarized"]
 	path = solarized/intellij-colors-solarized
 	url = https://github.com/jkaving/intellij-colors-solarized
+[submodule "awesome"]
+	path = awesome
+	url = https://github.com/aidanharris/awesome-config
