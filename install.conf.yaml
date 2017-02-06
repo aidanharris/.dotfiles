@@ -11,6 +11,8 @@
     ~/.config/awesome: awesome
     ~/.vim: vim
     ~/.vimrc: vimrc
+    ~/.zshrc: zshrc
+    ~/.real_zshrc: real_zshrc
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]

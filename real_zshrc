@@ -1,0 +1,310 @@
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+#if [ "$TMUX" ]
+#then
+#  export TERM=xterm-256color
+#fi
+
+if [ -z "$SCREEN" ]
+then
+  export SCREEN=:1
+fi
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Set name of the theme to load. Optionally, if you set this to "random"
+# it'll load a random theme each time that oh-my-zsh is loaded.
+# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+if [ -z "$ZSH_THEME" ]
+  then
+  if [[ "$SSH_CONNECTION" ]]
+  then
+    ZSH_THEME="cloud"
+  else
+    ZSH_THEME="agnoster"
+  fi
+fi
+
+if [ -z "$$XDG_CONFIG_HOME" ]
+then
+  export XDG_CONFIG_HOME="$HOME/.config"
+fi
+
+# ========================================
+# Plugin Configuration
+# ========================================
+export autoenv_dir=/usr/share/autoenv
+
+# ========================================
+# OS Specific Plugins
+# ========================================
+# On archlinux I load the archlinux and systemd plugins. Eventually
+# I plan to use some sort of templating (probably SaltStack) in
+# order to set the correct plugins for individual operating systems.
+#OS_PLUGINS=(archlinux systemd man colored-man-pages)
+OS_PLUGINS=(archlinux systemd)
+
+# Additional plugins to be loaded
+EXTRA_PLUGINS=(autoenv)
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+
+if [[ -z "$plugins" ]]
+then
+  if [[ -z "$EXTRA_PLUGINS" ]]
+  then
+    EXTRA_PLUGINS=()
+  fi
+  common_plugins=(common-aliases command-not-found gitfast thefuck)
+  docker_plugins=(docker docker-compose)
+  plugins=($OS_PLUGINS $common_plugins $EXTRA_PLUGINS)
+  old_plugins=($plugins)
+fi
+
+source "$ZSH/oh-my-zsh.sh"
+
+resetplugins() {
+  unset plugins
+  source $HOME/.zshrc
+}
+
+addplugin() {
+  for plugin in $@
+  do
+    if typeset -p "${plugin}_plugins" > /dev/null 2>&1; then
+      plugin+="_plugins"
+      plugins+=${(P)plugin}
+    else
+      plugins+=$plugin
+    fi
+  done
+
+  source $HOME/.zshrc
+}
+
+removeplugin() {
+  for plugin in $@
+  do
+    plugins=("${(@)plugins:#$plugin}")
+  done
+
+  source $HOME/.zshrc
+}
+
+vim-colorscheme() {
+  if [[ "$1" != "" ]]
+  then
+    export VIM_COLOR_SCHEME="$1"
+  fi
+}
+
+vim-background() {
+  if [[ "$1" != "" ]]
+  then
+    export LC_TERM_PROFILE="$1"
+  else
+    export LC_TERM_PROFILE=light
+  fi
+}
+
+# Reloads the virtualbox kernel modules and kills any running processes
+# Run this after a VirtualBox update or when VirtualBox is being stupid
+vboxreload() {
+  for module in {'vboxdrv','vboxnetadp','vboxnetflt','vboxpci'}
+  do
+    sudo modprobe "$module"
+  done
+  sudo pkill VBoxHeadless
+  sudo pkill VBoxSVC
+  sudo pkill VBoxXPCOMIPCD
+  sudo pkill VBoxSVC
+}
+
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+export LANG=en_GB.UTF-8
+export LC_CTYPE="$LANG"
+export LC_COLLATE="$LANG"
+
+export EDITOR=nvim
+export VISUAL="${EDITOR}"
+export BROWSER=/usr/bin/firefox
+
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH="${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools"
+
+export VAULT_ADDR="http://127.0.0.1:8200"
+
+# We may not want to look for a display e.g to save on performance when
+# sourcing this profile or on a server.
+FIND_DISPLAY=1
+if [[ -z "$DISPLAY" && "$FIND_DISPLAY" -eq 1 ]]
+then
+  for display in {0..10}
+  do
+    export DISPLAY=:$display
+    CAN_OPEN_DISPLAY=$(xrandr 2>/dev/stdout | grep "Can't open display" &> /dev/null 2>&1)
+    if [[ "$?" -eq 1 ]]
+    then
+      # We've found a display
+      break
+    fi
+  done
+fi
+
+if [[ -z "$LC_TERM_PROFILE" ]]
+then
+  export LC_TERM_PROFILE=dark
+fi
+
+if [[ -z "$VIM_COLOR_SCHEME" ]]
+then
+  export VIM_COLOR_SCHEME=solarized
+fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# ssh
+# export SSH_KEY_PATH="~/.ssh/dsa_id"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+
+for f in cls clea cleat clearr
+do
+  alias $f="clear"
+done
+
+alias pacuar=pacaur
+alias VboxManage="VBoxManage"
+
+readmd() {
+for f in "$@"
+do
+  pandoc "$f" | html2text -style pretty | less
+done
+}
+
+# This doesn't work for some reason!
+# To Do:
+#   * Find out why this doesn't work
+npm-upgrade() {
+ updates="$(npm -g outdated | sed 's/ .*//g' | grep -v Package | xargs echo)"
+ if [[ "$updates" != "" ]]
+ then
+   npm install -g "$updates"
+ fi
+}
+
+# Use it like this:
+# echo "/path/to/wallpaper.jpg | awesome-wallpaper
+awesome-wallpaper() {
+  xargs -I '{}' echo "local gears = require(\"gears\") gears.wallpaper.maximized(\"{}\", s, true)" | awesome-client
+}
+
+alias diff=colordiff
+alias webtorrent="webtorrent -o \"$HOME/Downloads\""
+alias kitematic="gksudo kitematic"
+alias powershell="powershell -NoLogo"
+alias update="sudo pacman -Su && sudo pacman -Syu && pacaur -Su"
+alias fuckingwindows="find . -type f -execdir dos2unix {} \;"
+#alias code=/opt/visual-studio-code/bin/code
+PATH="$PATH:/opt/VSCode-linux-x64/bin"
+code() {
+  (env code $@ &> /dev/null 2>&1 &)
+}
+gedit() {
+  (env gedit $@ &> /dev/null 2>&1 &)
+}
+vim() {
+  env nvim $@
+}
+vi() {
+  env nvim $@
+}
+docker() {
+  sudo -E env docker "$@"
+}
+docker-compose() {
+  sudo -E env docker-compose "$@"
+}
+calc() {
+  echo "$@" | bc
+}
+#https://superuser.com/questions/957913/how-to-fix-and-recover-a-corrupt-history-file-in-zsh#957924
+fix_zsh_history() {
+  mv .zsh_history .zsh_history_bad
+  strings .zsh_history_bad > .zsh_history
+  fc -R .zsh_history
+}
+dotnet() {
+  if [[ "$1" == "new" ]]
+  then
+    # `dotnet new` initialises a project with files in CRLF format - Let's fix that with dos2unix...
+    env dotnet "$@" && dos2unix ./* &> /dev/null 2>&1
+  else
+    env dotnet "$@"
+  fi
+}
+
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+export PATH="$N_PREFIX/bin:$PATH" # Use node.js in $N_PREFIX instead of the system version
+export GOPATH=$HOME/.go
+export PATH="$PATH:$GOPATH/bin"
+export PATH="~/.local/bin:$PATH"
+
+bash -c '/usr/bin/setxkbmap -option ctrl:nocaps &> /dev/null 2>&1; exit 0'
+
+export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
