@@ -1,0 +1,17 @@
+#
+# dotvim : https://github.com/dotphiles/dotvim
+#
+# Git ignore
+#
+# Authors:
+#   Ben O'Hara
+#
+
+.*
+bundle
+sessions
+spell
+!.dotvim
+!.gitignore
+!.gitmodules
+
