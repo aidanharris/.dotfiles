@@ -4,3 +4,9 @@
 [submodule "oh-my-zsh"]
 	path = oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh
+[submodule "solarized/gnome-terminal-colors-solarized"]
+	path = solarized/gnome-terminal-colors-solarized
+	url = https://github.com/Anthony25/gnome-terminal-colors-solarized
+[submodule "solarized/intellij-colors-solarized"]
+	path = solarized/intellij-colors-solarized
+	url = https://github.com/jkaving/intellij-colors-solarized
