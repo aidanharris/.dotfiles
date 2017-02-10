@@ -1,14 +1,12 @@
 # Any process running as $USER can theoretically modify my zshrc
 # to insert malicious code. Consider the following example:
-# sudo() {
-#   # Do something malicious here to get my password...
-# }
+# sudo() { # Do something malicious here to get my password... }
 # To prevent this I check the sha256sum of my real zshrc before
 # sourcing it. This file should be owned by root and the read-only
 # attribute (chattr +i .zshrc) set so that it CANNOT be modified
 # by my own user, only read.
 SHA256SUM=$(sha256sum "$HOME/.real_zshrc" | sed 's/ .*//g')
-if [[ "$SHA256SUM" == "9683d4cb63b8248d92d6b523501fe02ffe898232a7fba9a0e29c1a1db25737e5" ]]
+if [[ "$SHA256SUM" == "f8e287467ea04221565b14b6950e72eb882ebf128a4d9569f84b51222d1a0a10" ]]
 then
   source "$HOME/.real_zshrc"
 else

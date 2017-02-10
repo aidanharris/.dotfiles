@@ -222,6 +222,7 @@ done
 
 alias pacuar=pacaur
 alias VboxManage="VBoxManage"
+alias YCM-Generator="$HOME/.vim/bundle/YCM-Generator/config_gen.py"
 
 readmd() {
 for f in "$@"
@@ -298,8 +299,9 @@ dotnet() {
 export PATH="$N_PREFIX/bin:$PATH" # Use node.js in $N_PREFIX instead of the system version
 export GOPATH=$HOME/.go
 export PATH="$PATH:$GOPATH/bin"
-export PATH="~/.local/bin:$PATH"
+export PATH="$PATH:~/.local/bin"
 
 bash -c '/usr/bin/setxkbmap -option ctrl:nocaps &> /dev/null 2>&1; exit 0'
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
+export PATH="$N_PREFIX/bin:$PATH"
