@@ -28,14 +28,14 @@ then
   fi
 
   export POLKIT_PID=
-  POLKIT_PID=$(pgrep -u aidan polkit-gnome-au)
+  POLKIT_PID=$(pgrep -u $USER polkit-gnome-au)
   if [[ $? -eq 1 ]]
   then
     /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
   fi
 
-  export GNOME_SCREENSAVER=
-  GNOME_SCREENSAVER=$(pgrep -u aidan gnome-screen)
+  export GNOME_SCREENSAVER_PID=
+  GNOME_SCREENSAVER_PID=$(pgrep -u $USER gnome-screen)
   if [[ $? -eq 1 ]]
   then
     /usr/bin/gnome-screensaver &
