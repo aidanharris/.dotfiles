@@ -19,3 +19,7 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
+  - 
+    command: sh -c "if [[ -f /bin/bash && -f /usr/bin/curl && ! -d "$HOME/n" ]]; then curl -s -L https://git.io/n-install | bash; else echo 'Skipping because ~/n folder exists'; fi"
+    stdout: true
+    stderr: true
