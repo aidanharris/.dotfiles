@@ -1,0 +1,79 @@
+#!/bin/bash
+# I'm not at all proud of this monstrosity :P
+# To Do:
+#    * Clean me up!
+
+date >> /tmp/.started_up
+
+# Setup dual monitors - Did I mention how much I hate xrandr?
+xrandr --newmode "1920x1080_60.00" 173.00 1920 2048 2248 2576 1080 1083 1088 1120 -hsync +vsync  &> /dev/null 2>&1
+xrandr --addmode DVI-I-0 1920x1080_60.00 &> /dev/null 2>&1
+#xrandr --output DVI-I-0 --mode 1280x1024
+xrandr --output DVI-I-0 --mode 1920x1080_60.00
+xrandr --output HDMI-0 --mode 2560x1080 --primary
+#xrandr --output HDMI-0 --mode 1920x1080 --primary
+xrandr --output HDMI-0 --right-of DVI-I-0
+
+if [[ -f .Xresources ]]
+then
+  xrdb -merge .Xresources
+fi
+
+if [[ $XDG_SESSION_DESKTOP == "awesome-gnome" || $XDG_SESSION_DESKTOP == "awesome" ]]
+then
+  ps aux | grep redshift-gtk | grep -v grep &> /dev/null 2>&1
+  if [[ $? -eq 1 ]]
+  then
+    redshift-gtk &> /dev/null 2>&1 &
+  fi
+
+  export POLKIT_PID=
+  POLKIT_PID=$(pgrep -u aidan polkit-gnome-au)
+  if [[ $? -eq 1 ]]
+  then
+    /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+  fi
+
+  export GNOME_SCREENSAVER=
+  GNOME_SCREENSAVER=$(pgrep -u aidan gnome-screen)
+  if [[ $? -eq 1 ]]
+  then
+    /usr/bin/gnome-screensaver &
+  fi
+  ps aux | grep pnmixer | grep -v grep &> /dev/null 2>&1
+  if [[ $? -eq 1 ]]
+  then
+    pnmixer &
+  fi
+  NVIDIA_SETTINGS_OVERRIDE=1
+  if [[ $(cat /usr/lib/modprobe.d/nvidia.conf) != "blacklist nvidia" && $NVIDIA_SETTINGS_OVERRIDE -ne 1 ]]
+  then
+    ps aux | grep nvidia-settings | grep -v grep || nvidia-settings --load-config-only &> /dev/null 2>&1 &
+  fi
+
+  #ps aux | grep conky | grep -v grep | grep conky\ \\-b\ \\-q || conky -b -q &> /dev/null 2>&1 &
+  #ps aux | grep conky | grep -v grep | grep conky\ \\-b\ \\-q || conky -b -q -x 1280 &> /dev/null 2>&1 &
+  ps aux | grep conky | grep -v grep | grep conky\ \\-b\ \\-q || conky -b -q -x 1920 &> /dev/null 2>&1 &
+  nm-applet &> /dev/null 2>&1
+  #ps aux | grep nvidia-settings | grep -v grep &> /dev/null 2&>1
+  #if [[ $? -eq 1 ]]
+  #then
+  #  nvidia-settings &> /dev/null 2>&1 &
+  #fi
+  #xrandr --output HDMI-0 --mode 2560x1080
+
+# Hack around the black wallpaper on the second monitor by restarting awesome after 1 second
+if [[ ! -f /tmp/awesome-started ]]
+then
+  touch /tmp/awesome-started
+  bash -c 'sleep 1 && xdotool key --clearmodifiers super+ctrl+r' &
+else
+  rm /tmp/awesome-started
+fi
+
+fi
+
+# Load Bluetooth modules for pulseaudio
+pactl load-module module-bluetooth-discover &> /dev/null 2>&1 || true
+pactl load-module module-bluez5-discover &> /dev/null 2>&1 || true
+#autokey-gtk &> /dev/null 2&>1 &

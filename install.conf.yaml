@@ -14,6 +14,7 @@
     ~/.zshrc: zshrc
     ~/.real_zshrc: real_zshrc
     ~/.local: local
+    ~/.startup: startup
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
