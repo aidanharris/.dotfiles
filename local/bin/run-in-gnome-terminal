@@ -1,0 +1,7 @@
+#!/bin/bash
+if [[ -z $1 ]]
+then
+	/usr/bin/gnome-terminal
+	exit
+fi
+/usr/bin/gnome-terminal -x sh -c "$(echo $@)"

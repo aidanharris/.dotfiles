@@ -1,0 +1,7 @@
+#!/bin/bash
+if [[ -z $1 ]]
+then
+	/usr/bin/konsole
+	exit
+fi
+/usr/bin/konsole -e "$(echo $@)"
