@@ -1,0 +1,12 @@
+[Unit]
+Description=Brightnessd Service
+#Requires=display-manager.service
+#After=display-manager.service
+
+[Service]
+Restart=always
+ExecStart=/home/aidan/brightnessd/brightnessd
+ExecStop=/usr/bin/pkill brightnessd
+
+[Install]
+WantedBy=default.target
