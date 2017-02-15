@@ -201,7 +201,7 @@ fi
 
 if [[ -z "$VIM_COLOR_SCHEME" ]]
 then
-  export VIM_COLOR_SCHEME=solarized
+  export VIM_COLOR_SCHEME=molokai
 fi
 
 # Compilation flags
