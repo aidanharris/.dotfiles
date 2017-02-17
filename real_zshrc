@@ -293,6 +293,90 @@ dotnet() {
   fi
 }
 
+# This abomination (there really is no other word) checks for updates to custom vagrant boxes
+# using the Last-Modified HTTP header and comparing that against a known folder in $HOME/.vagrant.d/boxes/MY_BOX/
+vagrant box custom-update() {
+
+if [[ "$@" != "box custom-update" ]]
+then
+  env vagrant "$@"
+  return
+fi
+
+UPDATE_NEEDED=$(xargs -0 php -r << EOF
+if (!file_exists('Vagrantfile')) {
+  exit(1);
+} else {
+  \$box = \`cat Vagrantfile | grep -E 'config.vm.box = ".*"' | sed 's/.*"http/http/g' | rev | cut -c 2- | rev | xargs printf \`;
+}
+
+\$normalised_box = \`echo "\$box" | sed 's/\//-VAGRANTSLASH-/g' | xargs printf\`;
+
+\$curl = curl_init(\$box);
+
+//don't fetch the actual page, you only want headers
+curl_setopt(\$curl, CURLOPT_NOBODY, true);
+
+//stop it from outputting stuff to stdout
+curl_setopt(\$curl, CURLOPT_RETURNTRANSFER, true);
+
+// attempt to retrieve the modification date
+curl_setopt(\$curl, CURLOPT_FILETIME, true);
+
+\$result = curl_exec(\$curl);
+
+if (\$result === false) {
+    die (curl_error(\$curl));
+}
+
+\$remote_timestamp = curl_getinfo(\$curl, CURLINFO_FILETIME);
+if (\$remote_timestamp == -1) {
+  exit(1);
+}
+
+\$HOME = getenv('HOME');
+if (!isset(\$HOME)) {
+  exit(1);
+}
+
+//\$timestamp = filemtime(\`ls -dh \$HOME/.vagrant.d/boxes/\$normalised_box/* | head -n1\`);
+\$timestamp = \`ls -dh \$HOME/.vagrant.d/boxes/\$normalised_box/* | head -n1 | xargs printf\`;
+if (file_exists(\$timestamp)) {
+  \$timestamp = filemtime(\$timestamp);
+  if (\$remote_timestamp > \$timestamp) {
+    echo "{\"UPDATE_NEEDED\": \"" . \$normalised_box . "\", \"box\": \"" . \$box . "\"}";
+  } else {
+    echo "OK";
+  }
+}
+EOF
+)
+
+if [[ "$UPDATE_NEEDED" == "{\"UPDATE_NEEDED\":"* ]]
+then
+  normalised_box="$(echo "$UPDATE_NEEDED" | grep -oE '{\"UPDATE_NEEDED\": \".*\",' | sed 's/.*: \"//g' | rev | cut -c 3- | rev)"
+  box="$(echo "$UPDATE_NEEDED" | grep -oE '\"box\": \".*\"' | sed 's/\"box\":.* \"//g' | rev | cut -c 2- | rev)"
+  echo "An updated box for $box is available!"
+  echo "Do you want to update (y/n): "
+  while true
+  do
+  read yn
+  if [[ "$yn" == "Y" || $yn == "y" || "$yn" == "N" || "$yn" == "n" ]]
+  then
+    if [[ "$yn" == "N" || "$yn" == "n" ]]
+    then
+      break;
+    fi
+    env vagrant box add "$box" --name "$normalised_box" --force; break;
+  else
+    echo "Please answer y or n";
+  fi
+  done
+else
+  echo "Box is already up to date"
+fi
+}
+
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
