@@ -357,7 +357,7 @@ then
   normalised_box="$(echo "$UPDATE_NEEDED" | grep -oE '{\"UPDATE_NEEDED\": \".*\",' | sed 's/.*: \"//g' | rev | cut -c 3- | rev)"
   box="$(echo "$UPDATE_NEEDED" | grep -oE '\"box\": \".*\"' | sed 's/\"box\":.* \"//g' | rev | cut -c 2- | rev)"
   echo "An updated box for $box is available!"
-  echo "Do you want to update (y/n): "
+  printf "Do you want to update (y/n): "
   while true
   do
   read yn
