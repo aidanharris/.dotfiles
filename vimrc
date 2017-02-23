@@ -37,6 +37,7 @@ if has("user_commands")
   Bundle 'OmniSharp/Omnisharp-vim'
   Bundle 'git://github.com/Valloric/YouCompleteMe.git'
   Bundle 'rdnetto/YCM-Generator'
+  Bundle 'mattn/emmet-vim'
 endif
 
 filetype plugin on
