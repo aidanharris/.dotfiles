@@ -27,19 +27,27 @@ then
     redshift-gtk &> /dev/null 2>&1 &
   fi
 
-  export POLKIT_PID=
+  POLKIT_PID=
   POLKIT_PID=$(pgrep -u $USER polkit-gnome-au)
   if [[ $? -eq 1 ]]
   then
     /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
   fi
 
-  export GNOME_SCREENSAVER_PID=
+  GNOME_SCREENSAVER_PID=
   GNOME_SCREENSAVER_PID=$(pgrep -u $USER gnome-screen)
   if [[ $? -eq 1 ]]
   then
     /usr/bin/gnome-screensaver &
   fi
+
+  KDECONNECT_INDICATOR_PID=
+  KDECONNECT_INDICATOR_PID=$(pgrep -u $USER indicator-kdeco)
+  if [[ $? -eq 1 ]]
+  then
+    /bin/indicator-kdeconnect &> /dev/null 2>&1 &
+  fi
+
   ps aux | grep pnmixer | grep -v grep &> /dev/null 2>&1
   if [[ $? -eq 1 ]]
   then
