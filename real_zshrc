@@ -191,6 +191,10 @@ then
       # We've found a display
       break
     fi
+    if [[ "$?" -eq 0 ]]
+    then
+      unset DISPLAY
+    fi
   done
 fi
 
