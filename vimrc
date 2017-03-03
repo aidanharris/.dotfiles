@@ -38,6 +38,9 @@ if has("user_commands")
   Bundle 'git://github.com/Valloric/YouCompleteMe.git'
   Bundle 'rdnetto/YCM-Generator'
   Bundle 'mattn/emmet-vim'
+  Bundle 'rbgrouleff/bclose.vim'
+  Bundle 'francoiscabrol/ranger.vim'
+  Bundle 'PProvost/vim-ps1'
 endif
 
 filetype plugin on
