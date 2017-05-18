@@ -18,7 +18,7 @@ if [ -z "$ZSH_THEME" ]
   then
     ZSH_THEME="cloud"
   else
-    ZSH_THEME="pure"
+    ZSH_THEME="refined"
   fi
 fi
 
@@ -35,14 +35,86 @@ export autoenv_dir=/usr/share/autoenv
 # ========================================
 # OS Specific Plugins
 # ========================================
-# On archlinux I load the archlinux and systemd plugins. Eventually
-# I plan to use some sort of templating (probably SaltStack) in
-# order to set the correct plugins for individual operating systems.
-#OS_PLUGINS=(archlinux systemd man colored-man-pages)
-OS_PLUGINS=(archlinux systemd)
+OS_PLUGINS=()
+
+# How to check if running in Cygwin, Mac or Linux?
+# https://stackoverflow.com/a/27776822
+if [ ! -f "$HOME/.zsh-os-plugins" ]
+then
+  case "$(uname -s)" in
+
+   Darwin)
+     OS_PLUGINS+=(osx)
+     if brew --version &> /dev/null
+     then
+      OS_PLUGINS+=(brew)
+     fi
+     ;;
+
+   Linux)
+     OS="$(cat /etc/os-release | grep -E '^ID=' | sed 's/^.*=//g' | sed 's/\"//g')"
+     case "$OS" in
+
+      debian)
+        OS_PLUGINS+=(debian)
+        ;;
+      ubuntu)
+        OS_PLUGINS+=(ubuntu)
+        ;;
+      fedora)
+        OS_PLUGINS+=(fedora)
+        # Use dnf --version because the fedora docker container doesn't have a `which` command
+        if dnf --version &> /dev/null
+        then
+          OS_PLUGINS+=(dnf)
+        fi
+        ;;
+      suse|opensuse)
+        OS_PLUGINS+=(suse)
+        ;;
+      *)
+        OS_LIKE="$(cat /etc/os-release | grep -E '^ID_LIKE=' | sed 's/^.*=//g' | sed 's/\"//g')"
+        case "$OS_LIKE" in
+          arch|archlinux)
+            OS_PLUGINS+=(archlinux)
+            ;;
+          *)
+            ;;
+          esac
+        ;;
+      esac
+
+      if systemctl --version &> /dev/null
+      then
+        OS_PLUGINS+=(systemd)
+      fi
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*)
+     #God help you...
+     ;;
+
+   *)
+     #some fancy BSD?
+     ;;
+  esac
+  if man --version &> /dev/null
+  then
+    OS_PLUGINS+=(man colored-man-pages)
+  fi
+
+  echo "OS_PLUGINS=($OS_PLUGINS)" > "$HOME/.zsh-os-plugins"
+else
+  source "$HOME/.zsh-os-plugins"
+fi
 
 # Additional plugins to be loaded
 EXTRA_PLUGINS=(autoenv)
+
+if [[ "$TMUX" ]]
+then
+  EXTRA_PLUGINS+=(tmux tmuxinator vi-mode)
+fi
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -109,15 +181,29 @@ resetplugins() {
 addplugin() {
   for plugin in $@
   do
+    # Sanity check - Don't `source .zshrc` if we don't have to
+    if [[ $plugins == *"$plugin"* ]]
+    then
+      if [ -z "$ADDED_PLUGINS" ]
+      then
+        ADDED_PLUGINS=0
+      fi
+      continue
+    fi
+
     if typeset -p "${plugin}_plugins" > /dev/null 2>&1; then
       plugin+="_plugins"
       plugins+=${(P)plugin}
     else
       plugins+=$plugin
     fi
+    ADDED_PLUGINS=1
   done
 
-  source $HOME/.zshrc
+  if [[ "$ADDED_PLUGINS" -eq 1 ]]
+  then
+    source $HOME/.zshrc
+  fi
 }
 
 removeplugin() {
@@ -127,6 +213,15 @@ removeplugin() {
   done
 
   source $HOME/.zshrc
+}
+
+zshtheme() {
+  if [ -z "$1" ]
+  then
+    echo "Usage: zshtheme THEME"
+  else
+    ZSH_THEME="$1" exec zsh
+  fi
 }
 
 vim-colorscheme() {
@@ -252,7 +347,10 @@ awesome-wallpaper() {
   xargs -I '{}' echo "local gears = require(\"gears\") gears.wallpaper.maximized(\"{}\", s, true)" | awesome-client
 }
 
-alias diff=colordiff
+diff() {
+  colordiff "$@" 2>&/dev/null || env diff "$@"
+}
+
 alias webtorrent="webtorrent -o \"$HOME/Downloads\""
 alias kitematic="gksudo kitematic"
 alias powershell="powershell -NoLogo"
@@ -394,5 +492,5 @@ bash -c '/usr/bin/setxkbmap -option ctrl:nocaps &> /dev/null 2>&1; exit 0'
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 export PATH="$N_PREFIX/bin:$PATH"
 
-source /usr/share/undistract-me/long-running.bash
-notify_when_long_running_commands_finish_install
+source /usr/share/undistract-me/long-running.bash  &> /dev/null 2>&1 || true
+notify_when_long_running_commands_finish_install &> /dev/null 2>&1 || true
