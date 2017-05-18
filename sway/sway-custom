@@ -1,0 +1,5 @@
+#!/bin/bash
+export XKB_DEFAULT_LAYOUT=gb
+export XKB_DEFAULT_OPTIONS=ctrl:nocaps,
+export GTK_THEME=Arc
+sway
