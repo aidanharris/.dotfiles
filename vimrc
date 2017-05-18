@@ -32,7 +32,6 @@ if has("user_commands")
   Bundle 'editorconfig/editorconfig-vim'
   Bundle 'git://github.com/saltstack/salt-vim.git'
   Bundle 'git://github.com/leafgarland/typescript-vim.git'
-  Bundle 'molokai'
   Bundle 'git://github.com/lambdatoast/elm.vim.git'
   Bundle 'OmniSharp/Omnisharp-vim'
   Bundle 'git://github.com/Valloric/YouCompleteMe.git'
@@ -41,6 +40,11 @@ if has("user_commands")
   Bundle 'rbgrouleff/bclose.vim'
   Bundle 'francoiscabrol/ranger.vim'
   Bundle 'PProvost/vim-ps1'
+  Bundle 'gregsexton/gitv'
+
+  " Colour Schemes
+  Bundle 'molokai'
+  Bundle 'google/vim-colorscheme-primary'
 endif
 
 filetype plugin on
