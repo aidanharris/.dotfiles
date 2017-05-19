@@ -78,6 +78,9 @@ then
           arch|archlinux)
             OS_PLUGINS+=(archlinux)
             ;;
+          debian)
+            OS_PLUGINS+=(debian)
+            ;;
           *)
             ;;
           esac
