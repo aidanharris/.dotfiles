@@ -41,6 +41,8 @@ if has("user_commands")
   Bundle 'francoiscabrol/ranger.vim'
   Bundle 'PProvost/vim-ps1'
   Bundle 'gregsexton/gitv'
+  Bundle 'mxw/vim-jsx'
+  Bundle 'walm/jshint.vim'
 
   " Colour Schemes
   Bundle 'molokai'
