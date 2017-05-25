@@ -43,6 +43,9 @@ if has("user_commands")
   Bundle 'gregsexton/gitv'
   Bundle 'mxw/vim-jsx'
   Bundle 'walm/jshint.vim'
+  Bundle 'rhysd/open-pdf.vim'
+  Bundle 'https://github.com/google/vim-ft-go.git'
+  Bundle 'https://github.com/fatih/vim-go.git'
 
   " Colour Schemes
   Bundle 'molokai'
