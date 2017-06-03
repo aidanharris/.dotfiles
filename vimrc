@@ -46,6 +46,8 @@ if has("user_commands")
   Bundle 'rhysd/open-pdf.vim'
   Bundle 'https://github.com/google/vim-ft-go.git'
   Bundle 'https://github.com/fatih/vim-go.git'
+  Bundle 'sindresorhus/vim-xo'
+  Bundle 'Chiel92/vim-autoformat'
 
   " Colour Schemes
   Bundle 'molokai'
