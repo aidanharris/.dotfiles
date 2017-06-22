@@ -209,6 +209,13 @@ addplugin() {
   fi
 }
 
+_addplugin() {
+  PATH="/usr/local/sbin:/usr/local/bin:/usr/bin"
+  reply=( $(find "$ZSH/plugins" -type d -maxdepth 1 -execdir bash -c 'echo {} | cut -c 3-' \; | tail -n +2) )
+}
+
+compctl -K _addplugin addplugin
+
 removeplugin() {
   for plugin in $@
   do
@@ -217,6 +224,12 @@ removeplugin() {
 
   source $HOME/.zshrc
 }
+
+_removeplugin() {
+  reply=($plugins)
+}
+
+compctl -K _removeplugin removeplugin
 
 zshtheme() {
   if [ -z "$1" ]
@@ -227,12 +240,26 @@ zshtheme() {
   fi
 }
 
+_zshtheme() {
+  _themes=(random)
+  reply=( $_themes $(ls -f "$ZSH/themes" | sed 's/.zsh-theme//g' | tail -n +3) )
+}
+
+compctl -K _zshtheme zshtheme
+
 vim-colorscheme() {
   if [[ "$1" != "" ]]
   then
     export VIM_COLOR_SCHEME="$1"
   fi
 }
+
+_vim-colorscheme() {
+  PATH="/usr/local/sbin:/usr/local/bin:/usr/bin"
+  reply=( $(find "$HOME/.vim"/ -type d -name "colors" -execdir bash -c 'ls -f {} | grep -E ".*.vim" | rev | cut -c5- | rev' \;) )
+}
+
+compctl -K _vim-colorscheme vim-colorscheme
 
 vim-background() {
   if [[ "$1" != "" ]]
@@ -242,6 +269,12 @@ vim-background() {
     export LC_TERM_PROFILE=light
   fi
 }
+
+_vim-background() {
+  reply=( light dark)
+}
+
+compctl -K _vim-background vim-background
 
 # Reloads the virtualbox kernel modules and kills any running processes
 # Run this after a VirtualBox update or when VirtualBox is being stupid
@@ -490,19 +523,29 @@ export GOPATH=$HOME/.go
 export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:~/.local/bin"
 
-bash -c '/usr/bin/setxkbmap -option ctrl:nocaps &> /dev/null 2>&1; exit 0'
+if [ ! -z $DISPLAY ]
+then
+  bash -c '/usr/bin/setxkbmap -option ctrl:nocaps &> /dev/null 2>&1; exit 0'
+fi
 
 export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
 export PATH="$N_PREFIX/bin:$PATH"
 
-if which checkupdates &> /dev/null
-then
-  UPDATES="$(checkupdates)"
-  if [[ "$UPDATES" != "" ]]
+checkupdates() {
+  if env which checkupdates &> /dev/null
   then
-    echo "Updates:\n$UPDATES"
+    UPDATES="$(env checkupdates)"
+    if [[ "$UPDATES" != "" ]]
+    then
+      echo "Updates:\n$UPDATES"
+    fi
   fi
-fi
+}
 
-source /usr/share/undistract-me/long-running.bash  &> /dev/null 2>&1 || true
-notify_when_long_running_commands_finish_install &> /dev/null 2>&1 || true
+checkupdates &
+
+if [ -d /usr/share/undistract-me ]
+then
+  source /usr/share/undistract-me/long-running.bash  &> /dev/null 2>&1 || true
+  notify_when_long_running_commands_finish_install &> /dev/null 2>&1 || true
+fi

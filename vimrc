@@ -23,7 +23,6 @@ if has("user_commands")
   source ~/.vim/vundles.vim
   Bundle 'Xuyuanp/nerdtree-git-plugin'
   Bundle 'vim-airline/vim-airline-themes'
-  Bundle 'git://github.com/altercation/vim-colors-solarized.git'
   Bundle 'rust-lang/rust.vim'
   Bundle 'KabbAmine/zeavim.vim'
   Bundle 'racer-rust/vim-racer'
@@ -50,7 +49,9 @@ if has("user_commands")
   Bundle 'Chiel92/vim-autoformat'
 
   " Colour Schemes
-  Bundle 'molokai'
+  Bundle 'arcticicestudio/nord-vim'
+  Bundle 'tomasr/molokai'
+  Bundle 'altercation/vim-colors-solarized'
   Bundle 'google/vim-colorscheme-primary'
 endif
 
