@@ -359,6 +359,10 @@ alias pacuar=pacaur
 alias VboxManage="VBoxManage"
 alias YCM-Generator="$HOME/.vim/bundle/YCM-Generator/config_gen.py"
 
+alias vundleinstall="nvim +PluginInstall +qall"
+alias vundleupdate="nvim +PluginUpdate +qall"
+alias vundleclean="nvim +PluginClean +qall"
+
 readmd() {
 for f in "$@"
 do
@@ -523,8 +527,9 @@ export GOPATH=$HOME/.go
 export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:~/.local/bin"
 
-if [ ! -z $DISPLAY ]
+if [[ ! -z $DISPLAY && $- =~ i ]]
 then
+  # Capslock as ctrl
   bash -c '/usr/bin/setxkbmap -option ctrl:nocaps &> /dev/null 2>&1; exit 0'
 fi
 
