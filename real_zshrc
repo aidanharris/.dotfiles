@@ -289,6 +289,12 @@ vboxreload() {
   sudo pkill VBoxSVC
 }
 
+bootiso() {
+  qemu-system-x86_64 -enable-kvm -cpu host -vga virtio -m 8G -cdrom "$1"
+}
+
+_bootiso() { _arguments '1: : _files -g "*.(#i)iso"' }
+compdef {_,}bootiso
 
 # User configuration
 
