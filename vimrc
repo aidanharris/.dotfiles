@@ -55,6 +55,7 @@ if has("user_commands")
   Bundle 'google/vim-colorscheme-primary'
   Bundle 'https://github.com/joshdick/onedark.vim.git'
   Bundle 'sickill/vim-monokai'
+  Bundle 'trusktr/seti.vim'
 endif
 
 filetype plugin on
