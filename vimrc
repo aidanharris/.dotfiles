@@ -53,6 +53,8 @@ if has("user_commands")
   Bundle 'tomasr/molokai'
   Bundle 'altercation/vim-colors-solarized'
   Bundle 'google/vim-colorscheme-primary'
+  Bundle 'https://github.com/joshdick/onedark.vim.git'
+  Bundle 'sickill/vim-monokai'
 endif
 
 filetype plugin on
