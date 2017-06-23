@@ -17,10 +17,12 @@ if has("user_commands")
   set rtp+=~/.vim/bundle/vundle/
   call vundle#rc()
   "let g:vundles=['general', 'git', 'hg', 'programming', 'completion', 'ruby', 'python', 'misc']
-  let g:vundles=['general', 'misc', 'python', 'programming', 'git']
+  "let g:vundles=['general', 'misc', 'python', 'programming', 'git']
+  let g:vundles=[]
   "let g:neocomplcache_enable_at_startup = 1
   " Load 'vundles'
   source ~/.vim/vundles.vim
+  Bundle 'scrooloose/nerdtree'
   Bundle 'Xuyuanp/nerdtree-git-plugin'
   Bundle 'vim-airline/vim-airline-themes'
   Bundle 'rust-lang/rust.vim'
