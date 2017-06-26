@@ -11,6 +11,7 @@
     ~/.tmux.conf: tmux.conf
     ~/.config/awesome: awesome
     ~/.vim: vim
+    ~/.config/nvim: vim
     ~/.vimrc: vimrc
     ~/.zshrc: zshrc
     ~/.real_zshrc: real_zshrc
