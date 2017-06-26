@@ -553,8 +553,6 @@ checkupdates() {
   fi
 }
 
-checkupdates &
-
 if [ -d /usr/share/undistract-me ]
 then
   source /usr/share/undistract-me/long-running.bash  &> /dev/null 2>&1 || true
