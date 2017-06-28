@@ -342,7 +342,7 @@ fi
 
 if [[ -z "$VIM_COLOR_SCHEME" ]]
 then
-  export VIM_COLOR_SCHEME=molokai
+  export VIM_COLOR_SCHEME=nord
 fi
 
 # Compilation flags
