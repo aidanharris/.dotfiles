@@ -14,6 +14,8 @@ source ~/.vim/dotvim.vim
 if has("user_commands")
   set nocompatible
   filetype off
+  let g:python3_host_prog='python3'
+  let g:python_host_prog='python2'
   set rtp+=~/.vim/bundle/vundle/
   call vundle#rc()
   "let g:vundles=['general', 'git', 'hg', 'programming', 'completion', 'ruby', 'python', 'misc']
@@ -49,6 +51,7 @@ if has("user_commands")
   Bundle 'https://github.com/fatih/vim-go.git'
   Bundle 'sindresorhus/vim-xo'
   Bundle 'Chiel92/vim-autoformat'
+  Bundle 'neomake/neomake'
 
   " Colour Schemes
   Bundle 'arcticicestudio/nord-vim'
