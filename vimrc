@@ -57,6 +57,7 @@ if has("user_commands")
   Bundle 'arcticicestudio/nord-vim'
   Bundle 'tomasr/molokai'
   Bundle 'altercation/vim-colors-solarized'
+  Bundle 'iCyMind/NeoSolarized'
   Bundle 'google/vim-colorscheme-primary'
   Bundle 'https://github.com/joshdick/onedark.vim.git'
   Bundle 'sickill/vim-monokai'
@@ -120,6 +121,10 @@ endif
 if $VIM_COLOR_SCHEME == "molokai" || $VIM_COLOR_SCHEME == ""
   let g:molokai_original = 1
   let g:rehash256 = 1
+endif
+
+if $VIM_COLOR_SCHEME == "NeoSolarized"
+  set termguicolors
 endif
 
 " Remap Commands
