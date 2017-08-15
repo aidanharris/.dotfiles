@@ -32,7 +32,6 @@ if has("user_commands")
   Bundle 'racer-rust/vim-racer'
   Bundle 'git://github.com/tpope/vim-dispatch.git'
   Bundle 'git://github.com/digitaltoad/vim-pug.git'
-  Bundle 'editorconfig/editorconfig-vim'
   Bundle 'git://github.com/saltstack/salt-vim.git'
   Bundle 'git://github.com/leafgarland/typescript-vim.git'
   Bundle 'git://github.com/lambdatoast/elm.vim.git'
@@ -62,6 +61,9 @@ if has("user_commands")
   Bundle 'https://github.com/joshdick/onedark.vim.git'
   Bundle 'sickill/vim-monokai'
   Bundle 'trusktr/seti.vim'
+
+  " EditorConfig (loaded last to prevent anything conflicting)
+  Bundle 'editorconfig/editorconfig-vim'
 endif
 
 filetype plugin on
@@ -74,6 +76,9 @@ let g:syntastic_javascript_standard_exec = 'semistandard'
 " C#
 let g:syntastic_cs_checkers = ['code_checker']
 let g:OmniSharp_server_type = 'roslyn'
+
+let g:EditorConfig_exec_path = '/usr/bin/editorconfig'
+let g:EditorConfig_core_mode = 'external_command'
 
 " Override colorscheme from base16
 " Customize to your needs...
